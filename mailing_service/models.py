@@ -12,11 +12,11 @@ NULLABLE = {'blank': True, 'null': True}
 
 class Client(models.Model):
     '''
-	Клиент сервиса:
-	— контактный email,
-	— ФИО,
-	— комментарий.
-	'''
+    Клиент сервиса:
+    — контактный email,
+    — ФИО,
+    — комментарий.
+    '''
     
     last_name = models.CharField(max_length=50, verbose_name='фамилия')
     first_name = models.CharField(max_length=50, verbose_name='имя')
@@ -36,10 +36,10 @@ class Client(models.Model):
 
 class Message(models.Model):
     '''
-	Сообщение для рассылки:
-	— тема письма,
-	— тело письма.
-	'''
+    Сообщение для рассылки:
+    — тема письма,
+    — тело письма.
+    '''
     
     title = models.CharField(max_length=100, verbose_name='тема рассылки')
     body = models.TextField(verbose_name='тело рассылки')
@@ -55,12 +55,12 @@ class Message(models.Model):
 
 class MailingSetting(models.Model):
     '''
-	Рассылка (настройка):
-	— время рассылки;
-	— периодичность: раз в день, раз в неделю, раз в месяц;
-	— статус рассылки: завершена, создана, запущена.
-	'''
-    
+    Рассылка (настройка):
+    — время рассылки;
+    — периодичность: раз в день, раз в неделю, раз в месяц;
+    — статус рассылки: завершена, создана, запущена.
+    '''
+
     FREQUENCY = [('DAY', 'раз в день'), ('WEEK', 'раз в неделю'), ('MONTH', 'раз в месяц')]
     
     STATUS = [('FINISH', 'завершена'), ('CREATE', 'создана'), ('START', 'запущена')]
@@ -85,11 +85,11 @@ class MailingSetting(models.Model):
 
 class LogsMessage(models.Model):
     '''
-	Логи рассылки:
-	— дата и время последней попытки;
-	— статус попытки;
-	— ответ почтового сервера, если он был.
-	'''
+    Логи рассылки:
+    — дата и время последней попытки;
+    — статус попытки;
+    — ответ почтового сервера, если он был.
+    '''
     
     STATUS = [('Success', 'успешно'), ('Failure', 'отказ')]
     
