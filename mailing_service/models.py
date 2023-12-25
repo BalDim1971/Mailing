@@ -14,7 +14,7 @@ class Client(models.Model):
     '''
     Клиент сервиса:
     — контактный email,
-    — ФИО,
+    — ФИО, полное + "фамилия и.о." ???
     — комментарий.
     '''
     
@@ -60,10 +60,18 @@ class MailingSetting(models.Model):
     — периодичность: раз в день, раз в неделю, раз в месяц;
     — статус рассылки: завершена, создана, запущена.
     '''
-
-    FREQUENCY = [('DAY', 'раз в день'), ('WEEK', 'раз в неделю'), ('MONTH', 'раз в месяц')]
     
-    STATUS = [('FINISH', 'завершена'), ('CREATE', 'создана'), ('START', 'запущена')]
+    FREQUENCY = [
+        ('DAY', 'раз в день'),
+        ('WEEK', 'раз в неделю'),
+        ('MONTH', 'раз в месяц')
+    ]
+    
+    STATUS = [
+        ('FINISH', 'завершена'),
+        ('CREATE', 'создана'),
+        ('START', 'запущена')
+    ]
     
     time = models.TimeField(auto_now_add=True, verbose_name='время рассылки')
     create_date = models.DateField(auto_now_add=True, verbose_name='дата создания')
@@ -91,7 +99,10 @@ class LogsMessage(models.Model):
     — ответ почтового сервера, если он был.
     '''
     
-    STATUS = [('Success', 'успешно'), ('Failure', 'отказ')]
+    STATUS = [
+        ('Success', 'успешно'),
+        ('Failure', 'отказ')
+    ]
     
     date_time = models.DateTimeField(auto_now_add=True, verbose_name='дата и время отправки')
     status = models.CharField(max_length=50, choices=STATUS, verbose_name='статус попытки')
