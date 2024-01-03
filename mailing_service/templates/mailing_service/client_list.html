@@ -2,31 +2,6 @@
 
 {% block content %}
 {% for object in object_list %}
-<div class="col">
-    <div class="card mb-4 rounded-3 shadow-sm">
-        <div class="card-header py-3">
-            <h4 class="my-0 fw-normal">
-                {{ object.last_name }}
-                {{ object.first_name }}
-                {% if object.patronymic %}
-                {{ object.patronymic }}
-                {% endif %}
-            </h4>
-        </div>
-        <div class="card-body">
-            <h1 class="card-title pricing-card-title">$15<small class="text-muted fw-light">/mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-                <li>30 users included</li>
-                <li>15 GB of storage</li>
-                <li>Phone and email support</li>
-                <li>Help center access</li>
-            </ul>
-            <!--            <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>-->
-            <a href="#" type="button" class="w-100 btn btn-lg btn-block btn-outline-primary">
-                Информация
-            </a>
-        </div>
-    </div>
-</div>
+    {% include 'mailing_service/include/inc_client_card.html'%}
 {% endfor %}
 {% endblock %}
