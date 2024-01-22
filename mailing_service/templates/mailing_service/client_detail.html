@@ -1,6 +1,7 @@
-{% load static %}
+{% extends 'mailing_service/base.html' %}
 {% load my_tags %}
 
+{% block content %}
 <div class="col">
     <div class="card mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
@@ -15,13 +16,11 @@
         <div class="card-body">
             <ul class="list-unstyled mt-3 mb-4">
                 <li>{{ object.email }}</li>
+                <li>{{ object.comments }}</li>
             </ul>
-                    <a href="{% url 'mailing_service:client_view' object.pk %}"
-                       class="btn btn-primary">Просмотр</a>
-                    <a href="{% url 'mailing_service:client_edit' object.pk %}"
-                       class="btn btn-primary">Редактировать</a>
-                    <a href="{% url 'mailing_service:client_delete' object.pk %}"
-                       class="btn btn-primary">Delete</a>
+            <a href="{% url 'mailing_service:client_list' %}" class="btn btn-success">Возврат</a></div>
         </div>
     </div>
 </div>
+
+{% endblock %}
