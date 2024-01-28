@@ -4,33 +4,35 @@
 
 {% block content %}
 
-<div class="col-md-5">
-    <div class="card mb-5 box-shadow">
-        <div class="card-body">
-            <h2>Всего рассылок в сервисе</h2>
-            <p>{{ mailings_count }}</p>
+<div class="row">
+    <div class="col-md-5">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h3>Всего рассылок в сервисе</h3>
+                <p>{{ mailings_count }}</p>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-5">
-    <div class="card mb-5 box-shadow">
-        <div class="card-body">
-            <h2>Всего активных рассылок</h2>
-            <p>{{ active_mailings_count }}</p>
+    <div class="col-md-5">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h3>Всего активных рассылок</h3>
+                <p>{{ active_mailings_count }}</p>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-5">
-    <div class="card mb-5 box-shadow">
-        <div class="card-body">
-            <h2>Число уникальных клиентов</h2>
-            <p>{{ clients_count }}</p>
+    <div class="col-md-5">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h3>Число уникальных клиентов</h3>
+                <p>{{ clients_count }}</p>
+            </div>
         </div>
     </div>
 </div>
 <div class="row">
     {% for blog in blog_list %}
-    <div class="col-4">
+    <div class="col-md-4">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
                 <div class="card-header py-3">
