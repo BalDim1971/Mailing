@@ -4,24 +4,37 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Сервер почтовых рассылок</title>
+    <title>Рассылки - {% if title %} - {{ title }} {% endif %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'pricing.css' %}" rel="stylesheet">
+<!--    <link href="{% static 'pricing.css' %}" rel="stylesheet">-->
 
 </head>
 
 <body>
-<div class="container py-3">
-    {% include 'mailing_service/include/inc_main_menu.html' %}
-    <main>
-        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </main>
-</div>
+{% include 'mailing_service/include/inc_main_menu.html' %}
+
+<main role="main">
+    {% include 'mailing_service/include/inc_main_title.html' %}
+    <div class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </div> <!-- /container -->
+</main>
+
+<footer class="container">
+    <p>&copy; Для Skypro 2023-24</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="{% static 'popper.min.js' %}"></script>
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
 </body>
 
 </html>

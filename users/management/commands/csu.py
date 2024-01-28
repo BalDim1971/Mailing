@@ -12,7 +12,8 @@ class Command(BaseCommand):
             last_name='SkyPro',
             is_staff=True,
             is_superuser=True,
-            is_active=True
+            is_active=True,
+            is_phone=True,
         )
         user.set_password('12345678')
         user.save()

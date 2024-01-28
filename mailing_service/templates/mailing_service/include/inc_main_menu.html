@@ -1,26 +1,63 @@
-<header>
-    <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
-        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-            <span class="fs-4">Сервер почтовых рассылок</span>
-        </a>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">Рассылки</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-            <a class="me-3 py-2 text-dark text-decoration-none"
-               href="{% url 'mailing_service:client_list' %}">Клиенты
-            </a>
-            <a class="me-3 py-2 text-dark text-decoration-none"
-               href="#">История рассылок
-            </a>
-            <a class="me-3 py-2 text-dark text-decoration-none"
-               href="#">Сообщения
-            </a>
-            <a class="py-2 text-dark text-decoration-none"
-               href="#">Настройка рассылок
-            </a>
-        </nav>
-    </div>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'mailing_service:home' %}">Главная</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Рассылки</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Сообщения</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="{% url 'mailing_service:client_list' %}">Клиенты</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Блог</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Логи</a>
+            </li>
+            {% endif %}
+        {% if perms.users.set_is_active %}
+            <li class="nav-item">
+               <a class="nav-link" href="#">Пользователи</a>
+            </li>
+        {% endif %}
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:logout' %}">Выйти</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:profile' %}">Профиль</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+            </li>
+            {% endif %}
+        {% if user.is_authenticated and user.is_verify %}
 
-    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-        <h1 class="display-4 fw-normal">{{ title }}</h1>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Верификация</a>
+            </li>
+        {% endif %}
+        </ul>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
+            <button class="btn btn-outline-success" type="submit">Поиск</button>
+        </form>
     </div>
-</header>
+</nav>

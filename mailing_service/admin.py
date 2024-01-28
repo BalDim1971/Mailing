@@ -16,7 +16,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(MailingSetting)
 class MailingSettingsAdmin(admin.ModelAdmin):
-    list_display = ('time', 'frequency', 'message', )
+    list_display = ('name', 'start_date', 'finish_date', 'frequency', 'status', 'owner', 'is_activated', )
     list_filter = ('message', )
 
 
