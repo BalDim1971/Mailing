@@ -27,7 +27,6 @@ class ClientListView(LoginRequiredMixin, ListView):
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
-    # fields = ('last_name', 'first_name', 'patronymic', 'email', 'comments')
     success_url = reverse_lazy('mailing_service:client_list')
     extra_context = {
         'title': 'Новый клиент'
@@ -56,8 +55,7 @@ class ClientDetailView(DetailView):
 class ClientUpdateView(UpdateView):
     model = Client
     form_class = ClientForm
-    success_url = reverse_lazy('mailing_service:client_view')
-    # fields = ('last_name', 'first_name', 'patronymic', 'email', 'comments')
+    success_url = reverse_lazy('mailing_service:client_list')
     extra_context = {
         'title': 'Изменяем данные'
     }

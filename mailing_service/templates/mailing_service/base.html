@@ -8,7 +8,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
-<!--    <link href="{% static 'pricing.css' %}" rel="stylesheet">-->
+    <!--    <link href="{% static 'pricing.css' %}" rel="stylesheet">-->
 
 </head>
 
@@ -16,7 +16,10 @@
 {% include 'mailing_service/include/inc_main_menu.html' %}
 
 <main role="main">
-    {% include 'mailing_service/include/inc_main_title.html' %}
+    <div class="bg-body-tertiary p-5 rounded">
+        <h1 class="display-4 fw-normal mb-3">Рассылки {% if title %} - {{ title }} {% else %} - Главная {% endif %}</h1>
+    </div>
+
     <div class="container">
 
         {% block content %}

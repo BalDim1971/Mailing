@@ -1,4 +1,5 @@
 {% extends 'mailing_service/base.html' %}
+{% load static %}
 {% load my_tags %}
 
 {% block content %}
@@ -9,7 +10,9 @@
     </a>
 </div>
 
-{% for object in object_list %}
+<div class="row">
+    {% for object in object_list %}
     {% include 'mailing_service/include/inc_client_card.html'%}
-{% endfor %}
+    {% endfor %}
+</div>
 {% endblock %}
