@@ -6,19 +6,15 @@
     <div class="card mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
             <h4 class="my-0 fw-normal">
-                {{ object.last_name }}
-                {{ object.first_name }}
-                {% if object.patronymic %}
-                {{ object.patronymic }}
-                {% endif %}
+                {{ object.title }}
             </h4>
         </div>
         <div class="card-body">
             <ul class="list-unstyled mt-3 mb-4">
-                <li>{{ object.email }}</li>
-                <li>{{ object.comments }}</li>
+                <li>{{ object.body }}</li>
+                <li>{{ object.owner }}</li>
             </ul>
-            <a href="{% url 'mailing_service:client_list' %}" class="btn btn-success">Возврат</a>
+            <a href="{% url 'mailing_service:client_list' %}" class="btn btn-success">Возврат</a></div>
         </div>
     </div>
 </div>

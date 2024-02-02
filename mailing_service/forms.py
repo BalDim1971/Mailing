@@ -16,22 +16,24 @@ class StyleFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if field_name not in ['is_active', 'email_verified', 'is_phone']:
+            if field_name not in args:
+                # if field_name not in ['is_active', 'email_verified', 'is_phone']:
                 field.widget.attrs['class'] = 'form-control'
 
 
-class MailingForm(StyleFormMixin, forms.ModelForm):
+class MailingSettingsForm(StyleFormMixin, forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         """Стилизация формы"""
         user = kwargs.pop("user")
         super().__init__(*args, **kwargs)
-        self.fields["client"].queryset = Client.objects.filter(owner=user)
+        self.fields["clients"].queryset = Client.objects.filter(owner=user)
         self.fields["message"].queryset = Message.objects.filter(owner=user)
     
     class Meta:
         model = MailingSetting
-        exclude = ('next_date', 'owner', 'status', 'is_activated',)
+        fields = '__all__'
+        # exclude = ('next_date', 'owner', 'status', 'is_activated',)
         
         widgets = {
             'start_date': DateTimeInput(attrs={'placeholder': 'ДД.ММ.ГГГГ ЧЧ:ММ:СС', 'type': 'datetime-local'}),
@@ -52,6 +54,10 @@ class MessageForm(StyleFormMixin, forms.ModelForm):
 
 
 class ClientForm(StyleFormMixin, forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        """Стилизация формы"""
+        super().__init__(['is_active', 'email_verified', 'is_phone'], **kwargs)
+    
     class Meta:
         model = Client
         exclude = ('owner',)

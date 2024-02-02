@@ -12,10 +12,10 @@
                 <a class="nav-link" href="{% url 'mailing_service:home' %}">Главная</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Рассылки</a>
+                <a class="nav-link" href="{% url 'mailing_service:mailing_settings_list' %}">Рассылки</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Сообщения</a>
+               <a class="nav-link" href="{% url 'mailing_service:message_list' %}">Сообщения</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="{% url 'mailing_service:client_list' %}">Клиенты</a>

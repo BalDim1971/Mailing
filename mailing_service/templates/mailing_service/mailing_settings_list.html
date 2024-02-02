@@ -1,0 +1,18 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block content %}
+
+<div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" style="margin-left: 170px;"
+       href="{% url 'mailing_service:mailing_settings_create' %}">Создать рассылку
+    </a>
+</div>
+
+<div class="row">
+    {% for object in object_list %}
+    {% include 'mailing_service/include/inc_mailing_settings_card.html'%}
+    {% endfor %}
+</div>
+{% endblock %}

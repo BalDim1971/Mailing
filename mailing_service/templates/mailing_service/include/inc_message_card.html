@@ -1,0 +1,22 @@
+{% load static %}
+{% load my_tags %}
+
+<div class="col">
+    <div class="card mb-4 rounded-3 shadow-sm">
+        <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">
+                {{ object.title }}
+                {{ object.body }}
+                {{ object.owner }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'mailing_service:message_view' object.pk %}"
+               class="btn btn-primary">Просмотр</a>
+            <a href="{% url 'mailing_service:message_edit' object.pk %}"
+               class="btn btn-primary">Редактировать</a>
+            <a href="{% url 'mailing_service:message_delete' object.pk %}"
+               class="btn btn-primary">Delete</a>
+        </div>
+    </div>
+</div>
