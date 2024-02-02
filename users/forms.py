@@ -6,19 +6,27 @@ from users.models import User
 
 
 class CustomUserCreationForm(StyleFormMixin, UserCreationForm):
-    
     class Meta:
         model = User
-        fields = ('email', 'password1', 'password2')
+        fields = ('email', 'phone', 'password1', 'password2')
 
 
 class UserProfileForm(StyleFormMixin, UserChangeForm):
-    
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'phone', 'avatar', 'country')
     
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(['is_active', 'email_verified', 'is_phone'], **kwargs)
         
+        self.fields['password'].widget = forms.HiddenInput()
+
+
+class ModeratorForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('is_active',)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(['is_active', 'email_verified', 'is_phone'], **kwargs)
         self.fields['password'].widget = forms.HiddenInput()

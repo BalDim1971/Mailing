@@ -2,15 +2,16 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import UpdateView, CreateView, TemplateView
+from django.views.generic import UpdateView, CreateView, TemplateView, ListView
 from django.contrib.auth.views import LoginView as BaseLoginView
 
-from users.forms import CustomUserCreationForm, UserProfileForm
+from users.forms import CustomUserCreationForm, UserProfileForm, ModeratorForm
 from users.models import User
+from users.services import send_mail_user, send_sms
 
 
 class LoginView(BaseLoginView):
@@ -30,8 +31,17 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
     form_class = UserProfileForm
     success_url = reverse_lazy('users:profile')
     
-    def get_object(self, queryset=None):
-        return self.request.user
+    def test_func(self):
+        _user = self.request.user
+        if self.request.user == self.get_object() or _user.has_perms(['users.set_is_active', ]):
+            return True
+        return self.handle_no_permission()
+
+    def get_form_class(self):
+        if self.request.user == self.get_object():
+            return UserProfileForm
+        elif self.request.user.has_perm('users.set_is_active'):
+            return ModeratorForm
 
 
 class UserRegisterView(CreateView):
@@ -41,14 +51,24 @@ class UserRegisterView(CreateView):
     success_url = reverse_lazy('users:login')
     
     def form_valid(self, form):
-        if form.is_valid():
-            new_user = form.save()
-            send_mail(
-                subject='Подтверждение почты',
-                message=f'Код {new_user.code}',
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[new_user.email]
-            )
+        new_user = form.save(commit=False)
+        new_user.save()
+        verify_code = User.objects.make_random_password(length=15)
+        verify_phone = User.objects.make_random_password(length=15)
+        new_user.code = verify_code
+        new_user.phone_verified = verify_phone
+        new_user.save()
+        result_send = send_mail_user(
+            subject='Подтверждение регистрации',
+            message=f' Для получения полного доступа, введите код активации: {verify_code}',
+            email_list=[new_user.email]
+        )
+
+        result_sms = send_sms(phone=new_user.phone, message=verify_phone)
+
+        print(result_send, result_sms, sep='\n\n')
+        print(f'{new_user} Введите код активации: {verify_code}')
+        print(f'{new_user.phone} код верификации: {verify_phone}')
         return super().form_valid(form)
 
 
@@ -62,19 +82,47 @@ def generate_new_password(request):
     )
     request.user.set_password(new_password)
     request.user.save()
-    return redirect(reverse('catalog:index'))
+    return redirect(reverse('mailing_service:home'))
 
 
 class VerificationTemplateView(TemplateView):
     template_name = 'users/msg_email.html'
     
-    def post(self, request):
-        code = request.POST.get('code')
-        user_code = User.objects.filter(code=code).first()
-        
-        if user_code is not None and user_code.code == code:
+    @staticmethod
+    def post(request):
+        verify_pass = request.POST.get('code')
+        user_code = User.objects.filter(code=verify_pass).first()
+        user_phone = User.objects.filter(phone_verified=verify_pass).first()
+        if user_code:
             user_code.is_active = True
             user_code.save()
+            result_send = send_mail_user(
+                subject='Успешная активация',
+                message='Код активации принят',
+                email_list=[user_code.email]
+            )
+            print(result_send)
             return redirect('users:login')
-        else:
+        if user_phone:
+            user_phone.is_verify = True
+            user_phone.save()
+            result_sms = send_sms(phone=user_phone.phone, message='Welcome')
+            print(f'Верификация телефона {user_phone.phone} прошла успешно')
+            print(result_sms)
+            return redirect('users:login')
+        elif not user_code:
             return redirect('users:verify_email_error')
+        else:
+            return redirect('users:register')
+        
+
+class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = User
+    extra_context = {'title': 'Пользователи', }
+    template_name = 'users/users_list.html'
+
+    def test_func(self):
+        _user = self.request.user
+        if _user.has_perms(['users.set_is_active', ]):
+            return True
+        return self.handle_no_permission()

@@ -29,7 +29,7 @@
             {% endif %}
         {% if perms.users.set_is_active %}
             <li class="nav-item">
-               <a class="nav-link" href="#">Пользователи</a>
+               <a class="nav-link" href="{% url 'users:users_list' %}">Пользователи</a>
             </li>
         {% endif %}
             {% if user.is_authenticated %}
@@ -37,7 +37,7 @@
                 <a class="nav-link" href="{% url 'users:logout' %}">Выйти</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:profile' %}">Профиль</a>
+                <a class="nav-link" href="{% url 'users:profile' user.pk %}">Профиль</a>
             </li>
             {% else %}
             <li class="nav-item">
@@ -51,7 +51,7 @@
 
         {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="#">Верификация</a>
+                <a class="nav-link" href="{% url 'users:verify_email' %}">Верификация</a>
             </li>
         {% endif %}
         </ul>
