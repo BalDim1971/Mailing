@@ -1,11 +1,13 @@
 """
 Вьюшки для приложения mailing_service.
 """
+from random import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+from blog.models import Blog
 from mailing_service.models import Client, Message, MailingSetting, LogsMessage
 from mailing_service.forms import MessageForm, ClientForm, MailingModeratorForm, MailingSettingsForm
 from mailing_service.services import get_cache_mailing_count, get_cache_mailing_active
@@ -84,12 +86,12 @@ class HomeView(ListView):
         context_data['mailings_count'] = get_cache_mailing_count()
         context_data['active_mailings_count'] = get_cache_mailing_active()
         context_data['clients_count'] = len(Client.objects.all())
-        # blog_list = list(blog.objects.all())
-        # if len(blog_list) > 3:
-        #     random.shuffle(blog_list)
-        #     context_data['blog_list'] = blog_list[:3]
-        # else:
-        #     context_data['blog_list'] = []
+        blog_list = list(Blog.objects.all())
+        if len(blog_list) > 3:
+            random.shuffle(blog_list)
+            context_data['blog_list'] = blog_list[:3]
+        else:
+            context_data['blog_list'] = []
 
         return context_data
 

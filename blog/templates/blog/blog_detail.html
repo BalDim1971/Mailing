@@ -1,0 +1,28 @@
+{% extends 'mailing_service/base.html' %}
+{% load my_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card_header">
+                <img class="card-img-top"
+                     src="{{ object.preview|mymedia }}"
+                     alt="Будет картинка">
+                <h5 class="card-title">
+                    Статья "{{ object.title }}" ({{ object.slug }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    {{ object.body }}
+                </p>
+            </div>
+            <div class="card-footer">
+                Просмотры: {{ object.count_views }}
+            </div>
+            <a href="{% url 'blog:list' %}" class="btn btn-success">Возврат</a></div>
+    </div>
+
+</div>
+{% endblock %}
