@@ -7,7 +7,6 @@
 from django.db import models
 from django.utils import timezone
 
-from config import settings
 import users.models
 from users.models import NULLABLE
 
@@ -64,12 +63,12 @@ class Message(models.Model):
 
 
 class MailingSetting(models.Model):
-    '''
+    """
     Рассылка (настройка):
     — время рассылки;
     — периодичность: раз в день, раз в неделю, раз в месяц;
     — статус рассылки: завершена, создана, запущена.
-    '''
+    """
     
     FREQUENCY = [
         ('ONCE', 'разовая'),

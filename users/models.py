@@ -2,7 +2,6 @@ import random
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django_countries.fields import CountryField
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -29,12 +28,11 @@ class User(AbstractUser):
     
     phone = models.CharField(max_length=35, verbose_name='телефон', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='аватар', **NULLABLE)
-    country = CountryField(max_length=150, verbose_name='страна', **NULLABLE)
     
-    is_active = models.BooleanField(default=True, choices=ACTIVE_CHOICES, verbose_name='почта проверена')
-    email_verified = models.BooleanField(default=False, verbose_name='проверка почты')
+    is_active = models.BooleanField(default=True, choices=ACTIVE_CHOICES, verbose_name='активен')
     
-    code = models.CharField(max_length=50, default=code, verbose_name='проверочный код', **NULLABLE)
+    email_verified = models.CharField(max_length=50, default=code, verbose_name='проверочный код почты', **NULLABLE)
+    is_email = models.BooleanField(default=False, verbose_name='почта проверена')
     
     phone_verified = models.CharField(max_length=50, default=code, verbose_name='проверочный код телефона', **NULLABLE)
     is_phone = models.BooleanField(default=True, choices=ACTIVE_CHOICES, verbose_name='телефон проверен')

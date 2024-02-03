@@ -15,23 +15,23 @@
                 <a class="nav-link" href="{% url 'mailing_service:mailing_settings_list' %}">Рассылки</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="{% url 'mailing_service:message_list' %}">Сообщения</a>
+                <a class="nav-link" href="{% url 'mailing_service:message_list' %}">Сообщения</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="{% url 'mailing_service:client_list' %}">Клиенты</a>
+                <a class="nav-link" href="{% url 'mailing_service:client_list' %}">Клиенты</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Блог</a>
+                <a class="nav-link" href="#">Блог</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Логи</a>
+                <a class="nav-link" href="{% url 'mailing_service:logs_list' %}">Логи</a>
             </li>
             {% endif %}
-        {% if perms.users.set_is_active %}
+            {% if perms.users.set_is_active %}
             <li class="nav-item">
-               <a class="nav-link" href="{% url 'users:users_list' %}">Пользователи</a>
+                <a class="nav-link" href="{% url 'users:users_list' %}">Пользователи</a>
             </li>
-        {% endif %}
+            {% endif %}
             {% if user.is_authenticated %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'users:logout' %}">Выйти</a>
@@ -47,13 +47,13 @@
                 <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
             </li>
             {% endif %}
-        {% if user.is_authenticated and user.is_verify %}
+            {% if user.is_authenticated and user.is_verify or user.is_superuser%}
 
-        {% else %}
+            {% else %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'users:verify_email' %}">Верификация</a>
             </li>
-        {% endif %}
+            {% endif %}
         </ul>
         <form class="d-flex" role="search">
             <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">

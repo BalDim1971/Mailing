@@ -14,19 +14,18 @@ class CustomUserCreationForm(StyleFormMixin, UserCreationForm):
 class UserProfileForm(StyleFormMixin, UserChangeForm):
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'phone', 'avatar', 'country')
+        fields = ('email', 'first_name', 'last_name', 'phone', 'avatar')
     
     def __init__(self, *args, **kwargs):
-        super().__init__(['is_active', 'email_verified', 'is_phone'], **kwargs)
-        
+        super().__init__(*args, **kwargs)
         self.fields['password'].widget = forms.HiddenInput()
 
 
-class ModeratorForm(UserChangeForm):
+class ModeratorForm(StyleFormMixin, UserChangeForm):
     class Meta:
         model = User
         fields = ('is_active',)
     
     def __init__(self, *args, **kwargs):
-        super().__init__(['is_active', 'email_verified', 'is_phone'], **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['password'].widget = forms.HiddenInput()

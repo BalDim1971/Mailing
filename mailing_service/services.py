@@ -44,13 +44,13 @@ def my_job():
                 else:
                     mailing.status = 'FINISH'
             
-            if mailing.interval == 'DAY':
+            if mailing.frequency == 'DAY':
                 mailing.next_date = log.date_time + day
-            elif mailing.interval == 'WEEK':
+            elif mailing.frequency == 'WEEK':
                 mailing.next_date = log.date_time + weak
-            elif mailing.interval == 'MONTH':
+            elif mailing.frequency == 'MONTH':
                 mailing.next_date = log.date_time + month
-            elif mailing.interval == 'ONCE':
+            elif mailing.frequency == 'ONCE':
                 mailing.next_date = mailing.finish_date
             
             mailing.save()
@@ -62,6 +62,8 @@ def my_job():
                     phone_list.append(client.phone)
             phone_str = '+'.join(phone_list)
             print(phone_str)
+            if phone_str is None:
+                return
             sms_result = send_sms(phone=phone_str, message=mailing.message.body)
             print(f'СМС - {sms_result["status"]}')
 

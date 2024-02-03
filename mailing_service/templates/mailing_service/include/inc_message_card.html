@@ -6,11 +6,13 @@
         <div class="card-header py-3">
             <h4 class="my-0 fw-normal">
                 {{ object.title }}
-                {{ object.body }}
-                {{ object.owner }}
             </h4>
         </div>
         <div class="card-body">
+            <ul class="list-unstyled mt-3 mb-4">
+                <li>{{ object.owner }}</li>
+                <li>{{ object.body }}</li>
+            </ul>
             <a href="{% url 'mailing_service:message_view' object.pk %}"
                class="btn btn-primary">Просмотр</a>
             <a href="{% url 'mailing_service:message_edit' object.pk %}"

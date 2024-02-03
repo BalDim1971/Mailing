@@ -1,8 +1,10 @@
-import random
+"""
+Вьюшки для приложения mailing_service.
+"""
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 
 from mailing_service.models import Client, Message, MailingSetting, LogsMessage
 from mailing_service.forms import MessageForm, ClientForm, MailingModeratorForm, MailingSettingsForm
@@ -19,9 +21,10 @@ class ClientListView(LoginRequiredMixin, ListView):
     
     def get_queryset(self, *ard, **kwargs):
         queryset = super().get_queryset(*ard, **kwargs)
+        
         if self.request.user.has_perm('mailing_service.can_view'):
             return queryset
-        return queryset.filter(owner='self.request.user')
+        return queryset.filter(owner=self.request.user)
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
@@ -46,11 +49,6 @@ class ClientDetailView(DetailView):
         'title': 'Подробная информация'
     }
     
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        self.object.save()
-        return self.object
-
 
 class ClientUpdateView(UpdateView):
     model = Client
@@ -60,21 +58,21 @@ class ClientUpdateView(UpdateView):
         'title': 'Изменяем данные'
     }
     
-    def test_func(self):
-        return self.request.user == Client.objects.get(pk=self.kwargs['pk']).owner
+    # def test_func(self):
+    #     return self.request.user == Client.objects.get(pk=self.kwargs['pk']).owner
 
 
 class ClientDeleteView(DeleteView):
     model = Client
     success_url = reverse_lazy('mailing_service:client_list')
     
-    def test_func(self):
-        permissions = ('mailing_service.client_delete',)
-        _user = self.request.user
-        _instance = self.get_object()
-        if _user == _instance.owner or _user.has_perms(permissions):
-            return True
-        return self.handle_no_permission()
+    # def test_func(self):
+    #     permissions = ('mailing_service.client_delete',)
+    #     _user = self.request.user
+    #     _instance = self.get_object()
+    #     if _user == _instance.owner or _user.has_perms(permissions):
+    #         return True
+    #     return self.handle_no_permission()
 
 
 class HomeView(ListView):
@@ -105,7 +103,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        if self.request.user.has_perm('mailingsettings.can_view'):
+        if self.request.user.has_perm('mailing_service.can_view'):
             return queryset
         return queryset.filter(owner=self.request.user)
 
@@ -139,13 +137,13 @@ class MessageDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('mailing_service:message_list')
 
-    def test_func(self):
-        if self.request.user == self.get_object().owner:
-            return True
-        return self.handle_no_permission()
+    # def test_func(self):
+    #     if self.request.user == self.get_object().owner:
+    #         return True
+    #     return self.handle_no_permission()
 
 
-class LogsListView(ListView):
+class LogsMessageListView(ListView):
     model = LogsMessage
     template_name = 'mailing_service/logs_list.html'
 
@@ -159,7 +157,7 @@ class MailingSettingsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        if self.request.user.has_perm('mailing.can_view'):
+        if self.request.user.has_perm('mailing_service.can_view'):
             return queryset
         return queryset.filter(owner=self.request.user)
 
@@ -184,3 +182,44 @@ class MailingSettingsCreateView(LoginRequiredMixin, CreateView):
         new_mailing.save()
         return super().form_valid(form)
 
+
+class MailingSettingsUpdateView(LoginRequiredMixin, UpdateView):
+    model = MailingSetting
+    form_class = MailingSettingsForm
+    template_name = 'mailing_service/mailing_settings_form.html'
+    success_url = reverse_lazy('mailing_service:mailing_settings_list')
+
+    def get_form_class(self):
+        if self.request.user == self.get_object().owner:
+            return MailingSettingsForm
+        elif self.request.user.has_perm('mailing_service.set_is_activated'):
+            return MailingModeratorForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+class MailingSettingsDetailView(LoginRequiredMixin, DetailView):
+    model = MailingSetting
+    template_name = 'mailing_service/mailing_settings_detail.html'
+    success_url = reverse_lazy('mailing_service:mailing_settings_list')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['clients'] = list(self.object.clients.all())
+        context_data['logs'] = list(LogsMessage.objects.filter(mailing=self.object))
+        return context_data
+
+
+class MailingSettingsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = MailingSetting
+    template_name = 'mailing_service/mailing_settings_confirm_delete.html'
+    success_url = reverse_lazy('mailing_service:mailing_settings_list')
+
+    # def test_func(self):
+    #     _user = self.request.user
+    #     if _user == self.get_object().owner or _user.has_perms(['mailing_service.can_delete', ]):
+    #         return True
+    #     return self.handle_no_permission()

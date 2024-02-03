@@ -5,7 +5,7 @@
 from django import forms
 from django.forms import DateTimeInput
 
-from mailing_service.models import Client, MailingSetting, Message, LogsMessage
+from mailing_service.models import Client, MailingSetting, Message
 
 
 class StyleFormMixin:
@@ -16,8 +16,7 @@ class StyleFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if field_name not in args:
-                # if field_name not in ['is_active', 'email_verified', 'is_phone']:
+            if field_name not in ['is_active', 'email_verified', 'is_phone']:
                 field.widget.attrs['class'] = 'form-control'
 
 
@@ -33,7 +32,6 @@ class MailingSettingsForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = MailingSetting
         fields = '__all__'
-        # exclude = ('next_date', 'owner', 'status', 'is_activated',)
         
         widgets = {
             'start_date': DateTimeInput(attrs={'placeholder': 'ДД.ММ.ГГГГ ЧЧ:ММ:СС', 'type': 'datetime-local'}),
@@ -56,7 +54,7 @@ class MessageForm(StyleFormMixin, forms.ModelForm):
 class ClientForm(StyleFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """Стилизация формы"""
-        super().__init__(['is_active', 'email_verified', 'is_phone'], **kwargs)
+        super().__init__(*args, **kwargs)
     
     class Meta:
         model = Client

@@ -2,7 +2,7 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import logout
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
@@ -29,7 +29,7 @@ def logout_view(request):
 class UserProfileView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('users:login')
     
     def test_func(self):
         _user = self.request.user
@@ -48,14 +48,14 @@ class UserRegisterView(CreateView):
     model = User
     form_class = CustomUserCreationForm
     template_name = 'users/register.html'
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy('users:verify_email')
     
     def form_valid(self, form):
         new_user = form.save(commit=False)
         new_user.save()
         verify_code = User.objects.make_random_password(length=15)
         verify_phone = User.objects.make_random_password(length=15)
-        new_user.code = verify_code
+        new_user.email_verified = verify_code
         new_user.phone_verified = verify_phone
         new_user.save()
         result_send = send_mail_user(
@@ -90,10 +90,11 @@ class VerificationTemplateView(TemplateView):
     
     @staticmethod
     def post(request):
-        verify_pass = request.POST.get('code')
-        user_code = User.objects.filter(code=verify_pass).first()
+        verify_pass = request.POST.get('verify_pass')
+        user_code = User.objects.filter(email_verified=verify_pass).first()
         user_phone = User.objects.filter(phone_verified=verify_pass).first()
         if user_code:
+            user_code.is_email = True
             user_code.is_active = True
             user_code.save()
             result_send = send_mail_user(
@@ -104,19 +105,18 @@ class VerificationTemplateView(TemplateView):
             print(result_send)
             return redirect('users:login')
         if user_phone:
-            user_phone.is_verify = True
+            user_phone.is_phone = True
+            user_phone.is_active = True
             user_phone.save()
             result_sms = send_sms(phone=user_phone.phone, message='Welcome')
             print(f'Верификация телефона {user_phone.phone} прошла успешно')
             print(result_sms)
             return redirect('users:login')
-        elif not user_code:
-            return redirect('users:verify_email_error')
         else:
-            return redirect('users:register')
+            return redirect('users:verify_email')
         
 
-class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class UserListView(LoginRequiredMixin, ListView):
     model = User
     extra_context = {'title': 'Пользователи', }
     template_name = 'users/users_list.html'

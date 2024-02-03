@@ -16,12 +16,12 @@
             <ul class="list-unstyled mt-3 mb-4">
                 <li>{{ object.email }}</li>
             </ul>
-                    <a href="{% url 'mailing_service:client_view' object.pk %}"
-                       class="btn btn-primary">Просмотр</a>
-                    <a href="{% url 'mailing_service:client_edit' object.pk %}"
-                       class="btn btn-primary">Редактировать</a>
-                    <a href="{% url 'mailing_service:client_delete' object.pk %}"
-                       class="btn btn-primary">Delete</a>
+            <a href="{% url 'mailing_service:client_view' object.pk %}"
+               class="btn btn-primary">Просмотр</a>
+            <a href="{% url 'mailing_service:client_edit' object.pk %}"
+               class="btn btn-primary">Редактировать</a>
+            <a href="{% url 'mailing_service:client_delete' object.pk %}"
+               class="btn btn-primary">Delete</a>
         </div>
     </div>
 </div>

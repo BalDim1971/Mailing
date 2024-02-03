@@ -5,6 +5,8 @@ from django.core.mail import send_mail
 
 
 def send_sms(phone='79998887766', message='HOHO'):
+    if phone is None:
+        return {"status": False}
     try:
         phone = phone.replace(' ', '+')
         message = message.replace(' ', '+')
