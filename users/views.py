@@ -2,7 +2,7 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
@@ -26,7 +26,7 @@ def logout_view(request):
     return redirect('/')  # на главную страницу сайта
 
 
-class UserProfileView(LoginRequiredMixin, UpdateView):
+class UserProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy('users:login')
@@ -108,7 +108,7 @@ class VerificationTemplateView(TemplateView):
             user_phone.is_phone = True
             user_phone.is_active = True
             user_phone.save()
-            result_sms = send_sms(phone=user_phone.phone, message='Welcome')
+            result_sms = send_sms(phone=user_phone.phone, message='Добро пожаловать')
             print(f'Верификация телефона {user_phone.phone} прошла успешно')
             print(result_sms)
             return redirect('users:login')
@@ -116,7 +116,7 @@ class VerificationTemplateView(TemplateView):
             return redirect('users:verify_email')
         
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = User
     extra_context = {'title': 'Пользователи', }
     template_name = 'users/users_list.html'

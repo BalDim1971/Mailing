@@ -4,7 +4,6 @@
 
 from django.views.generic import CreateView, DeleteView, ListView, DetailView, UpdateView
 from django.urls import reverse_lazy, reverse
-from pytils.translit import slugify
 
 from blog.forms import BlogForm
 from blog.models import Blog

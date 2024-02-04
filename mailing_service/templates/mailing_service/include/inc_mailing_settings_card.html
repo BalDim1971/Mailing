@@ -1,7 +1,4 @@
-{% load static %}
-{% load my_tags %}
-
-<div class="col">
+<div class="col-md-4">
     <div class="card mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
             <h4 class="my-0 fw-normal">
@@ -10,10 +7,9 @@
         </div>
         <div class="card-body">
             <ul class="list-unstyled mt-3 mb-4">
-                <li>{{ object.start_date }}</li>
-                <li>{{ object.finish_date }}</li>
-                <li>{{ object.frequency }}</li>
-                <li>{{ object.clients }}</li>
+                <li>Начало рассылки - {{ object.start_date }}</li>
+                <li>Окончание рассылки - {{ object.finish_date }}</li>
+                <li>Периодичность - {{ object.frequency }}</li>
             </ul>
             <a href="{% url 'mailing_service:mailing_settings_view' object.pk %}"
                class="btn btn-primary">Просмотр</a>
@@ -22,5 +18,12 @@
             <a href="{% url 'mailing_service:mailing_settings_delete' object.pk %}"
                class="btn btn-primary">Delete</a>
         </div>
+    </div>
+    <div class="card-footer">
+        {% if object.is_activated %}
+        <p>Действующая</p>
+        {% else %}
+        <p>Отменена</p>
+        {% endif %}
     </div>
 </div>

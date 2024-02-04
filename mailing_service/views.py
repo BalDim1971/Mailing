@@ -1,6 +1,7 @@
 """
 Вьюшки для приложения mailing_service.
 """
+
 from random import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -8,11 +9,10 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.urls import reverse_lazy
 
 from blog.models import Blog
+
 from mailing_service.models import Client, Message, MailingSetting, LogsMessage
 from mailing_service.forms import MessageForm, ClientForm, MailingModeratorForm, MailingSettingsForm
 from mailing_service.services import get_cache_mailing_count, get_cache_mailing_active
-
-# from blog.models import blog
 
 
 class ClientListView(LoginRequiredMixin, ListView):
@@ -60,21 +60,21 @@ class ClientUpdateView(UpdateView):
         'title': 'Изменяем данные'
     }
     
-    # def test_func(self):
-    #     return self.request.user == Client.objects.get(pk=self.kwargs['pk']).owner
+    def test_func(self):
+        return self.request.user == Client.objects.get(pk=self.kwargs['pk']).owner
 
 
 class ClientDeleteView(DeleteView):
     model = Client
     success_url = reverse_lazy('mailing_service:client_list')
     
-    # def test_func(self):
-    #     permissions = ('mailing_service.client_delete',)
-    #     _user = self.request.user
-    #     _instance = self.get_object()
-    #     if _user == _instance.owner or _user.has_perms(permissions):
-    #         return True
-    #     return self.handle_no_permission()
+    def test_func(self):
+        permissions = ('mailing_service.client_delete',)
+        _user = self.request.user
+        _instance = self.get_object()
+        if _user == _instance.owner or _user.has_perms(permissions):
+            return True
+        return self.handle_no_permission()
 
 
 class HomeView(ListView):
@@ -91,7 +91,7 @@ class HomeView(ListView):
             random.shuffle(blog_list)
             context_data['blog_list'] = blog_list[:3]
         else:
-            context_data['blog_list'] = []
+            context_data['blog_list'] = blog_list
 
         return context_data
 
@@ -139,15 +139,18 @@ class MessageDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('mailing_service:message_list')
 
-    # def test_func(self):
-    #     if self.request.user == self.get_object().owner:
-    #         return True
-    #     return self.handle_no_permission()
+    def test_func(self):
+        if self.request.user == self.get_object().owner:
+            return True
+        return self.handle_no_permission()
 
 
 class LogsMessageListView(ListView):
     model = LogsMessage
     template_name = 'mailing_service/logs_list.html'
+    extra_context = {
+        'title': 'Логи рассылок'
+    }
 
 
 class MailingSettingsListView(LoginRequiredMixin, ListView):
@@ -220,8 +223,8 @@ class MailingSettingsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteV
     template_name = 'mailing_service/mailing_settings_confirm_delete.html'
     success_url = reverse_lazy('mailing_service:mailing_settings_list')
 
-    # def test_func(self):
-    #     _user = self.request.user
-    #     if _user == self.get_object().owner or _user.has_perms(['mailing_service.can_delete', ]):
-    #         return True
-    #     return self.handle_no_permission()
+    def test_func(self):
+        _user = self.request.user
+        if _user == self.get_object().owner or _user.has_perms(['mailing_service.can_delete', ]):
+            return True
+        return self.handle_no_permission()

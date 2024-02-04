@@ -3,12 +3,11 @@
 {% load my_tags %}
 
 {% block content %}
-
 <div class="row">
     <div class="col-md-5">
         <div class="card mb-4 box-shadow">
             <div class="card-body">
-                <h3>Всего рассылок в сервисе</h3>
+                <h4>Всего рассылок в сервисе</h4>
                 <p>{{ mailings_count }}</p>
             </div>
         </div>
@@ -16,7 +15,7 @@
     <div class="col-md-5">
         <div class="card mb-4 box-shadow">
             <div class="card-body">
-                <h3>Всего активных рассылок</h3>
+                <h4>Всего активных рассылок</h4>
                 <p>{{ active_mailings_count }}</p>
             </div>
         </div>
@@ -24,7 +23,7 @@
     <div class="col-md-5">
         <div class="card mb-4 box-shadow">
             <div class="card-body">
-                <h3>Число уникальных клиентов</h3>
+                <h4>Число уникальных клиентов</h4>
                 <p>{{ clients_count }}</p>
             </div>
         </div>
@@ -33,20 +32,19 @@
 <div class="row">
     {% for blog in blog_list %}
     <div class="col-md-4">
-        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-            <div class="col p-4 d-flex flex-column position-static">
+        <div class="card mb-4 box-shadow">
                 <div class="card-header py-3">
-                    <h3 class="mb-0">{{ blog.topic }}</h3>
+                    <h4 class="mb-0">{{ blog.title }}</h4>
                 </div>
                 <div class="card-body py-3">
-                    <div class="mb-1 text-muted">{{ blog.public_date }}</div>
-                    <p class="card-text mb-auto">{{ blog.content }}</p>
+                    <img src="{{ object.preview|mymedia}}" alt="Будет картинка">
+                    <div class="mb-1 text-muted">Создано {{ blog.date_create }}</div>
+                    <p class="card-text mb-auto">{{ blog.body }}</p>
+                    <p class="card-text mb-auto">Просмотров {{ blog.count_views }}</p>
                 </div>
-            </div>
         </div>
     </div>
+    {% endfor %}
 </div>
-
-{% endfor %}
 
 {% endblock %}

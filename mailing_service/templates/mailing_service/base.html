@@ -1,10 +1,12 @@
 <!doctype html>
 {% load static %}
+{% load my_tags %}
+
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Рассылки {% if title %} - {{ title }} - Главная {% endif %}</title>
+    <title>Рассылки {% if title %} - {{ title }} {% else %} - Главная {% endif %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">

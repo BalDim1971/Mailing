@@ -1,27 +1,38 @@
 {% extends 'mailing_service/base.html' %}
+{% load static %}
 {% load my_tags %}
 
 {% block content %}
 <div class="col-12">
-    <div class="row">
+    <form class="row" method="post" enctype="multipart/form-data">
         <div class="col-6">
-            <div class="card">
+            <div class="card mb-5 box-shadow">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        {% if object %}
+                        Изменить статью - {{ object.title }}
+                        {% else %}
+                        Создать статью
+                        {% endif %}
+                    </h2>
+                </div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <button type="submit" class="btn btn-success">
                             {% if object %}
-                                Сохранить
-                            {% else  %}
-                                Создать
+                            Сохранить
+                            {% else %}
+                            Создать
                             {% endif %}
                         </button>
+                        <a href="{% url 'blog:list' %}" class="btn btn-success">Возврат</a>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 {% endblock %}
